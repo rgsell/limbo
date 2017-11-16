@@ -1,0 +1,12 @@
+kind: ConfigMap
+metadata:
+  namespace: namics
+  name: master-config-map
+  labels:
+    branch: master
+spec:
+  selector:
+    branch: master
+data:
+  active-profiles: DEV
+  time-zone: Europe/Zurich

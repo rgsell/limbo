@@ -1,0 +1,51 @@
+kind: Deployment
+metadata:
+  namespace: namics
+  name: master-deployment
+  labels:
+    branch: master
+spec:
+  selector:
+    matchLabels:
+      branch: master
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        branch: master
+    spec:
+      selector:
+        matchLabels:
+          branch: master
+      containers:
+      - name: master-tomcat
+        image: docker-repo.namics.com/namics-limbo/tomcat:0.0.1-SNAPSHOT
+        env:
+          - name: ACTIVE_PROFILES
+            valueFrom:
+              configMapKeyRef:
+                name: master-config-map
+                key: active-profiles
+          - name: TIME_ZONE
+            valueFrom:
+              configMapKeyRef:
+                name: master-config-map
+                key: time-zone
+          - name: JAVA_OPTS
+            value: '-Dspring.profiles.active=$(ACTIVE_PROFILES) -Duser.timezone=$(TIME_ZONE)'
+        ports:
+        - containerPort: 9443
+        - containerPort: 9080
+        - containerPort: 8080
+        - containerPort: 8009
+        volumeMounts:
+          - name: "data-tomcat"
+            mountPath: "/share"
+        imagePullPolicy: Always
+      volumes:
+         - name: "data-tomcat"
+           hostPath:
+               path: "/export/tomcat"
+      imagePullSecrets:
+#        change secret name
+        - name: docker-repo-namics-space

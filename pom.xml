@@ -6,7 +6,7 @@
 	<groupId>com.namics</groupId>
 	<artifactId>limbo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>limbo</name>
 	<description>Google Assistant Demo</description>

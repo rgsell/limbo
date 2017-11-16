@@ -1,0 +1,13 @@
+---
+name: "limbo"
+home: "http://projects.spring.io/spring-boot/limbo/"
+sources:
+- "https://git.namics.com/namics/limbo"
+version: "0.0.1-SNAPSHOT"
+description: "Google Assistant Demo"
+maintainers:
+- name: "Phillip Webb"
+  email: "pwebb at pivotal.io"
+- name: "Dave Syer"
+  email: "dsyer at pivotal.io"
+icon: "img/icons/spring-boot.svg"

@@ -1,0 +1,51 @@
+kind: Deployment
+metadata:
+  namespace: ${kubernetes.namespace}
+  name: ${git.branch}-deployment
+  labels:
+    branch: ${git.branch}
+spec:
+  selector:
+    matchLabels:
+      branch: ${git.branch}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        branch: ${git.branch}
+    spec:
+      selector:
+        matchLabels:
+          branch: ${git.branch}
+      containers:
+      - name: ${git.branch}-tomcat
+        image: ${docker.repository.url.repo}/${docker.repository.namespace}/${docker.image.name.tomcat}:${project.version}
+        env:
+          - name: ACTIVE_PROFILES
+            valueFrom:
+              configMapKeyRef:
+                name: ${git.branch}-config-map
+                key: active-profiles
+          - name: TIME_ZONE
+            valueFrom:
+              configMapKeyRef:
+                name: ${git.branch}-config-map
+                key: time-zone
+          - name: JAVA_OPTS
+            value: '-Dspring.profiles.active=$(ACTIVE_PROFILES) -Duser.timezone=$(TIME_ZONE)'
+        ports:
+        - containerPort: 9443
+        - containerPort: 9080
+        - containerPort: 8080
+        - containerPort: 8009
+        volumeMounts:
+          - name: "data-tomcat"
+            mountPath: "/share"
+        imagePullPolicy: Always
+      volumes:
+         - name: "data-tomcat"
+           hostPath:
+               path: "/export/tomcat"
+      imagePullSecrets:
+#        change secret name
+        - name: docker-repo-namics-space
