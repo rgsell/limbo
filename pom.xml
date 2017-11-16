@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.namics</groupId>
+	<artifactId>limbo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>limbo</name>
+	<description>Google Assistant Demo</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.8.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+
+	<organization>
+		<name>Namics AG</name>
+		<url>http://www.namics.com</url>
+	</organization>
+
+	<properties>
+		<java.version>1.8
+	</java.version>
+	<project.build.sourceEncoding>UTF-8
+</project.build.sourceEncoding>
+	<project.reporting.outputEncoding>UTF-8
+</project.reporting.outputEncoding>
+<maven.compiler.source>${java.version}</maven.compiler.source>
+<maven.compiler.target>${java.version}</maven.compiler.target>
+
+<maven.build.timestamp.format>yyyy-MM-dd-z-HH-mm-ss</maven.build.timestamp.format>
+<fabric8.maven.plugin.version>3.5.31</fabric8.maven.plugin.version>
+<docker.repository.url.projects>docker-projects.namics.com</docker.repository.url.projects>
+<docker.repository.url.common>docker-common.namics.com</docker.repository.url.common>
+<docker.repository.url.repo>docker-repo.namics.com</docker.repository.url.repo>
+<docker.image.name.tomcat>tomcat</docker.image.name.tomcat>
+<docker.image.name.apache>apache-dev</docker.image.name.apache>
+<environment.dev.baseurl>-limbo.env.namics-test.com</environment.dev.baseurl>
+		<!--change if you need project protection-->
+<docker.repository.namespace>namics-${project.artifactId}</docker.repository.namespace>
+		<!--change if you need project protection-->
+<kubernetes.namespace>namics</kubernetes.namespace>
+		</properties>
+
+<dependencies>
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+
+<dependency>
+	<groupId>com.h2database</groupId>
+	<artifactId>h2</artifactId>
+	<scope>runtime</scope>
+</dependency>
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-test</artifactId>
+	<scope>test</scope>
+</dependency>
+</dependencies>
+
+<build>
+<pluginManagement>
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-jar-plugin</artifactId>
+			<version>3.0.2</version>
+		</plugin>
+		<!--maven site plugins-->
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-project-info-reports-plugin</artifactId>
+			<version>2.9</version>
+		</plugin>
+		<plugin>
+			<groupId>org.owasp</groupId>
+			<artifactId>dependency-check-maven</artifactId>
+			<version>3.0.1</version>
+		</plugin>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-jxr-plugin</artifactId>
+			<version>2.5</version>
+		</plugin>
+		<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>versions-maven-plugin</artifactId>
+			<version>2.5</version>
+		</plugin>
+		<plugin>
+			<artifactId>maven-javadoc-plugin</artifactId>
+			<version>2.10.4</version>
+			<configuration>
+				<failOnError>false</failOnError>
+				<additionalparam>-Xdoclint:none</additionalparam>
+				<bottom>Copyright© 1995-2018 Namics AG. All rights reserved.</bottom>
+			</configuration>
+		</plugin>
+
+	</plugins>
+</pluginManagement>
+<plugins>
+	<plugin>
+		<groupId>pl.project13.maven</groupId>
+		<artifactId>git-commit-id-plugin</artifactId>
+		<version>2.2.3</version>
+		<executions>
+			<execution>
+				<phase>validate</phase>
+				<goals>
+					<goal>revision</goal>
+				</goals>
+			</execution>
+		</executions>
+		<configuration>
+			<prefix>git</prefix>
+			<dateFormat>${maven.build.timestamp.format}</dateFormat>
+			<verbose>false</verbose>
+			<skipPoms>true</skipPoms>
+			<generateGitPropertiesFile>false</generateGitPropertiesFile>
+			<failOnNoGitDirectory>false</failOnNoGitDirectory>
+			<skip>false</skip>
+			<gitDescribe>
+				<skip>false</skip>
+				<always>false</always>
+				<abbrev>7</abbrev>
+				<dirty>-dirty</dirty>
+				<forceLongFormat>true</forceLongFormat>
+			</gitDescribe>
+			<replacementProperties>
+				<replacementProperty>
+					<property>git.branch</property>
+					<token>^([^\/]*)\/([^\/]*)$</token>
+					<value>$1-$2</value>
+					<regex>true</regex>
+				</replacementProperty>
+			</replacementProperties>
+		</configuration>
+	</plugin>
+	<plugin>
+		<groupId>external.atlassian.jgitflow</groupId>
+		<artifactId>jgitflow-maven-plugin</artifactId>
+		<version>1.0-m5.1</version>
+		<configuration>
+			<pushReleases>true</pushReleases>
+			<pushHotfixes>true</pushHotfixes>
+			<pushFeatures>true</pushFeatures>
+			<pullDevelop>true</pullDevelop>
+			<pullMaster>true</pullMaster>
+		</configuration>
+	</plugin>
+	<plugin>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-maven-plugin</artifactId>
+	</plugin>
+
+	<!--sonar plugins-->
+	<plugin>
+		<groupId>org.sonarsource.scanner.maven</groupId>
+		<artifactId>sonar-maven-plugin</artifactId>
+		<version>3.3.0.603</version>
+	</plugin>
+	<plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>findbugs-maven-plugin</artifactId>
+		<version>3.0.5</version>
+	</plugin>
+	<plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>cobertura-maven-plugin</artifactId>
+		<version>2.7</version>
+	</plugin>
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-pmd-plugin</artifactId>
+		<version>3.8</version>
+	</plugin>
+
+	<!--maven site-->
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-site-plugin</artifactId>
+		<version>3.6</version>
+		<executions>
+			<execution>
+				<id>attach-descriptor</id>
+				<goals>
+					<goal>attach-descriptor</goal>
+				</goals>
+			</execution>
+		</executions>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.maven.doxia</groupId>
+				<artifactId>doxia-module-markdown</artifactId>
+				<version>1.7</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven.doxia</groupId>
+				<artifactId>doxia-core</artifactId>
+				<version>1.7</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav-jackrabbit</artifactId>
+				<version>2.12</version>
+			</dependency>
+		</dependencies>
+	</plugin>
+	<!--find duplicate classes-->
+	<plugin>
+		<groupId>org.basepom.maven</groupId>
+		<artifactId>duplicate-finder-maven-plugin</artifactId>
+		<version>1.2.1</version>
+		<!-- https://github.com/basepom/duplicate-finder-maven-plugin -->
+		<executions>
+			<execution>
+				<id>default</id>
+				<phase>verify</phase>
+				<goals>
+					<goal>check</goal>
+				</goals>
+			</execution>
+		</executions>
+		<configuration>
+
+			<failBuildInCaseOfDifferentContentConflict>true</failBuildInCaseOfDifferentContentConflict>
+			<failBuildInCaseOfEqualContentConflict>false</failBuildInCaseOfEqualContentConflict>
+			<failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
+			<checkCompileClasspath>true</checkCompileClasspath>
+			<checkRuntimeClasspath>true</checkRuntimeClasspath>
+			<checkTestClasspath>false</checkTestClasspath>
+			<useDefaultResourceIgnoreList>true</useDefaultResourceIgnoreList>
+			<includePomProjects>false</includePomProjects>
+			<useDefaultResourceIgnoreList>true</useDefaultResourceIgnoreList>
+
+			<ignoredClassPatterns>
+				<pattern>^org.xmlpull.v1.*</pattern> <!-- both from xstream -->
+			</ignoredClassPatterns>
+			<ignoredResourcePatterns>
+				<pattern>.*readme(\.md)?$</pattern>
+				<pattern>changelog.txt</pattern>
+				<pattern>mozilla/public-suffix-list.txt</pattern><!-- cxf vs  httpcomponents -->
+			</ignoredResourcePatterns>
+			<ignoredDependencies>
+				<dependency>
+					<groupId>aopalliance</groupId>
+					<artifactId>aopalliance</artifactId> <!-- vs spring-aop -->
+				</dependency>
+				<dependency>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId> <!-- vs impl -->
+				</dependency>
+				<dependency>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId> <!-- vs impl -->
+				</dependency>
+				<dependency>
+					<groupId>org.apache.tomcat.embed</groupId>
+					<artifactId>tomcat-embed-core</artifactId> <!-- several embedded javax apis -->
+				</dependency>
+				<dependency>
+					<groupId>org.apache.tomcat.embed</groupId>
+					<artifactId>tomcat-embed-el</artifactId> <!-- several embedded javax apis -->
+				</dependency>
+				<dependency>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat-annotations-api</artifactId> <!-- several embedded javax apis -->
+				</dependency>
+			</ignoredDependencies>
+		</configuration>
+	</plugin>
+	<!--kubernetes-->
+	<plugin>
+		<groupId>io.fabric8</groupId>
+		<artifactId>fabric8-maven-plugin</artifactId>
+		<version>${fabric8.maven.plugin.version}</version>
+		<configuration>
+			<!-- registry configuration -->
+			<registry>${docker.repository.url.projects}</registry>
+			<namespace>${kubernetes.namespace}</namespace>
+			<images>
+				<!-- tomcat image configuration -->
+				<image>
+					<name>${docker.repository.url.projects}/${docker.repository.namespace}/${docker.image.name.tomcat}</name>
+					<build>
+						<from>${docker.repository.url.common}/namics_java/tomcat:8.5.14</from>
+						<maintainer>info@namics.com</maintainer>
+						<nocache>true</nocache>
+						<tags>
+							<tag>latest</tag>
+							<tag>${project.version}</tag>
+						</tags>
+						<dockerFileDir>tomcat</dockerFileDir>
+						<!-- copy ROOT.war to build path -->
+						<assembly>
+							<inline>
+								<files>
+									<file>
+										<source>${project.basedir}/../${project.artifactId}/target/${project.artifactId}-${project.version}.war
+										</source>
+										<destName>ROOT.war</destName>
+										<outputDirectory/>
+									</file>
+								</files>
+							</inline>
+						</assembly>
+					</build>
+				</image>
+			</images>
+			<!-- Always pull docker images -->
+			<autoPull>always</autoPull>
+
+			<!-- helm configuration -->
+			<helm>
+				<chart>${project.artifactId}</chart>
+			</helm>
+		</configuration>
+		<executions>
+			<execution>
+				<id>generate-sources-docker</id>
+				<goals>
+					<goal>resource</goal>
+					<goal>helm</goal>
+				</goals>
+				<phase>generate-sources</phase>
+			</execution>
+			<execution>
+				<id>build-push-docker</id>
+				<goals>
+					<goal>build</goal>
+					<goal>push</goal>
+				</goals>
+				<phase>deploy</phase>
+			</execution>
+		</executions>
+	</plugin>
+	<plugin>
+		<groupId>org.codehaus.groovy.maven</groupId>
+		<artifactId>gmaven-plugin</artifactId>
+		<version>1.0</version>
+		<executions>
+			<execution>
+				<id>choose-target-repository</id>
+				<phase>initialize</phase>
+				<goals>
+					<goal>execute</goal>
+				</goals>
+				<configuration>
+					<source>
+						if (project.version.endsWith("-SNAPSHOT")) {
+						project.properties.targetrepository = project.distributionManagement.snapshotRepository.url;
+						} else {
+						project.properties.targetrepository = project.distributionManagement.repository.url;
+						}
+					</source>
+				</configuration>
+			</execution>
+		</executions>
+	</plugin>
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-deploy-plugin</artifactId>
+		<executions>
+			<execution>
+				<id>upload-helm-release</id>
+				<goals>
+					<goal>deploy-file</goal>
+				</goals>
+				<phase>deploy</phase>
+				<configuration>
+					<file>target/${project.artifactId}-${project.version}-helm.tar.gz</file>
+					<repositoryId>nexus.namics.com</repositoryId>
+					<packaging>tar.gz</packaging>
+					<artifactId>helm</artifactId>
+					<groupId>${project.groupId}</groupId>
+					<version>${project.version}</version>
+					<url>${targetrepository}</url>
+				</configuration>
+			</execution>
+		</executions>
+	</plugin>
+
+</plugins>
+</build>
+
+<reporting>
+<plugins>
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-project-info-reports-plugin</artifactId>
+		<configuration>
+			<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+		</configuration>
+	</plugin>
+	<plugin>
+		<groupId>org.owasp</groupId>
+		<artifactId>dependency-check-maven</artifactId>
+		<configuration>
+			<goal>check</goal>
+		</configuration>
+		<reportSets>
+			<reportSet>
+				<reports>
+					<report>aggregate</report>
+				</reports>
+			</reportSet>
+		</reportSets>
+	</plugin>
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-jxr-plugin</artifactId>
+		<reportSets>
+			<reportSet>
+				<reports>
+					<report>aggregate</report>
+				</reports>
+			</reportSet>
+		</reportSets>
+	</plugin>
+	<plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>versions-maven-plugin</artifactId>
+		<reportSets>
+			<reportSet>
+				<reports>
+					<report>dependency-updates-report</report>
+					<report>plugin-updates-report</report>
+				</reports>
+			</reportSet>
+		</reportSets>
+	</plugin>
+	<plugin>
+		<artifactId>maven-javadoc-plugin</artifactId>
+		<configuration>
+			<aggregate>true</aggregate>
+		</configuration>
+		<reportSets>
+			<reportSet>
+				<reports>
+					<report>javadoc</report>
+				</reports>
+			</reportSet>
+		</reportSets>
+	</plugin>
+</plugins>
+</reporting>
+
+<distributionManagement>
+<repository>
+	<id>nexus.namics.com</id>
+	<url>https://nexus.namics.com/repository/namics-projects</url>
+</repository>
+<snapshotRepository>
+	<id>snapshot.namics.nexus.namics.com</id>
+	<url>https://nexus.namics.com/repository/namics-projects-snapshot</url>
+</snapshotRepository>
+<site>
+	<id>nexus.namics.com</id>
+	<url>dav:https://nexus.namics.com/repository/namics-projects-sites/${project.groupId}/${project.artifactId}/${project.version}</url>
+</site>
+
+</distributionManagement>
+
+
+<scm>
+<url>https://git.namics.com/namics/limbo</url>
+<connection>scm:git:git@git.namics.com:namics/limbo.git</connection>
+<developerConnection>scm:git:git@git.namics.com:namics/limbo.git</developerConnection>
+</scm>
+
+
+		</project>
