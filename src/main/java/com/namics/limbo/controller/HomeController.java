@@ -56,7 +56,7 @@ public class HomeController {
 		}
 		if (number == 4) {
 			return new GActionResponse().displayText("Achtung, lustig.")
-			                            .speech("Hopp Sangallä, fürä mit em Ballä.");
+			                            .speech("hopp sangt gallä, füre mit em Ballä");
 		}
 		return new GActionResponse().speech("du hast limbo gesagt. wer kommt schon auf limbo " + number);
 	}
@@ -70,7 +70,7 @@ public class HomeController {
 			String prefix = n > 1000 ? "good job " : "uiuiui schlechtes jahr: ";
 			String name = rootRequest.getResult().getParameters().get("name");
 			if (name.equalsIgnoreCase("beat") || name.equalsIgnoreCase("helfenberger")) {
-				return new GActionResponse().speech(name + "erhält dieses Jahr kein Bonus, er möchte nur Witze hören");
+				return new GActionResponse().speech(name + " erhält dieses Jahr kein Bonus, er möchte nur Witze hören");
 			}
 			return new GActionResponse().speech(prefix + name + "erhält dieses Jahr einen Bonus von " + n);
 		}
