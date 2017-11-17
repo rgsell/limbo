@@ -7,6 +7,7 @@ import com.namics.limbo.gaction.AppEngineResponseHandler;
 import com.namics.limbo.gaction.MainRequestHandlerFactory;
 import com.namics.limbo.gaction.MyPermissionRequestHandlerFactory;
 import com.namics.limbo.gaction.TextRequestHandlerFactory;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * HomeController.
@@ -42,6 +44,11 @@ public class HomeController {
 						.build();
 
 		assistantActions.handleRequest(parseActionRequest(null));
+	}
+
+	@PostMapping("/test")
+	public void test(InputStream inputStream) throws IOException {
+		log.error("POST to test: {}", IOUtils.toString(inputStream));
 	}
 
 	private RootRequest parseActionRequest(RootRequest request) throws IOException {
