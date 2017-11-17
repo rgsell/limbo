@@ -68,4 +68,14 @@ public class GActionRequest {
 		setTimestamp(timestamp);
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		return "GActionRequest{" +
+		       "timestamp='" + timestamp + '\'' +
+		       ", lang='" + lang + '\'' +
+		       ", contexts=" + (contexts != null) +
+		       ", result=" + result +
+		       '}';
+	}
 }

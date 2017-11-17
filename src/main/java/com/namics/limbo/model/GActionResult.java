@@ -14,7 +14,7 @@ public class GActionResult {
 	private String resolvedQuery;
 	private String action;
 	private String actionIncomplete;
-	private Map<String, Object> parameters;
+	private Map<String, String> parameters;
 
 
 	public String getSource() {
@@ -69,16 +69,27 @@ public class GActionResult {
 		return this;
 	}
 
-	public Map<String, Object> getParameters() {
+	public Map<String, String> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(Map<String, Object> parameters) {
+	public void setParameters(Map<String, String> parameters) {
 		this.parameters = parameters;
 	}
 
-	public GActionResult parameters(Map<String, Object> parameters) {
+	public GActionResult parameters(Map<String, String> parameters) {
 		setParameters(parameters);
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "GActionResult{" +
+		       "source='" + source + '\'' +
+		       ", resolvedQuery='" + resolvedQuery + '\'' +
+		       ", action='" + action + '\'' +
+		       ", actionIncomplete='" + actionIncomplete + '\'' +
+		       ", parameters=" + parameters +
+		       '}';
 	}
 }

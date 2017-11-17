@@ -38,7 +38,7 @@ public class HomeController {
 		log.error("POST: " + rootRequest);
 		Integer number = null;
 		if (rootRequest.getResult().getParameters().containsKey("number")) {
-			number = (Integer) rootRequest.getResult().getParameters().get("number");
+			number = Integer.valueOf(rootRequest.getResult().getParameters().get("number"));
 		}
 
 		if (number == null) {

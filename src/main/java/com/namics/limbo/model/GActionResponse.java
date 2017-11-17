@@ -1,5 +1,7 @@
 package com.namics.limbo.model;
 
+import java.util.Arrays;
+
 /**
  * GActionResponse.
  *
@@ -50,5 +52,14 @@ public class GActionResponse {
 	public GActionResponse contextOut(Object[] contextOut) {
 		setContextOut(contextOut);
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "GActionResponse{" +
+		       "speech='" + speech + '\'' +
+		       ", displayText='" + displayText + '\'' +
+		       ", contextOut=" + Arrays.toString(contextOut) +
+		       '}';
 	}
 }
