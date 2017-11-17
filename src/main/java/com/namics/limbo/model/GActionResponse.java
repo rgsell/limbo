@@ -1,12 +1,12 @@
 package com.namics.limbo.model;
 
 /**
- * Response.
+ * GActionResponse.
  *
  * @author lboesch, Namics AG
  * @since 17.11.17 10:35
  */
-public class Response {
+public class GActionResponse {
 
 	private String speech = "";
 	private String displayText = "";
@@ -21,7 +21,7 @@ public class Response {
 		this.speech = speech;
 	}
 
-	public Response speech(String speech) {
+	public GActionResponse speech(String speech) {
 		setSpeech(speech);
 		return this;
 	}
@@ -34,7 +34,7 @@ public class Response {
 		this.displayText = displayText;
 	}
 
-	public Response displayText(String displayText) {
+	public GActionResponse displayText(String displayText) {
 		setDisplayText(displayText);
 		return this;
 	}
@@ -47,7 +47,7 @@ public class Response {
 		this.contextOut = contextOut;
 	}
 
-	public Response contextOut(Object[] contextOut) {
+	public GActionResponse contextOut(Object[] contextOut) {
 		setContextOut(contextOut);
 		return this;
 	}

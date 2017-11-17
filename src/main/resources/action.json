@@ -11,8 +11,9 @@
         "intent": "assistant.intent.action.MAIN"
       },
       "httpExecution": {
-        "url": "http://master-limbo.env.namics-test.com/"
+        "url": "https://master-limbo.env.namics-test.com/"
       }
     }
-  ]
+  ],
+  "locale": "de"
 }
