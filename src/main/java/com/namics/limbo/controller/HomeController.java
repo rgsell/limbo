@@ -51,7 +51,9 @@ public class HomeController {
 	@PostMapping("/test")
 	public RootResponse test(InputStream inputStream) throws IOException {
 		log.error("POST to test: {}", IOUtils.toString(inputStream));
-		return ResponseBuilder.tellResponse("You've just said: ueli");
+		RootResponse rootResponse = ResponseBuilder.tellResponse("You've just said: ueli");
+		log.error("Response: {}", rootResponse);
+		return rootResponse;
 	}
 
 	private RootRequest parseActionRequest(RootRequest request) throws IOException {
