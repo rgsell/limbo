@@ -9,6 +9,7 @@ import com.namics.limbo.gaction.AppEngineResponseHandler;
 import com.namics.limbo.gaction.MainRequestHandlerFactory;
 import com.namics.limbo.gaction.MyPermissionRequestHandlerFactory;
 import com.namics.limbo.gaction.TextRequestHandlerFactory;
+import com.namics.limbo.model.Response;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+
 
 /**
  * HomeController.
@@ -49,11 +51,11 @@ public class HomeController {
 	}
 
 	@PostMapping("/test")
-	public RootResponse test(InputStream inputStream) throws IOException {
+	public Response test(InputStream inputStream) throws IOException {
 		log.error("POST to test: {}", IOUtils.toString(inputStream));
 		RootResponse rootResponse = ResponseBuilder.tellResponse("You've just said: ueli");
 		log.error("Response: {}", rootResponse);
-		return rootResponse;
+		return new Response().speech("You've just said: ueli. rigth?");
 	}
 
 	private RootRequest parseActionRequest(RootRequest request) throws IOException {
