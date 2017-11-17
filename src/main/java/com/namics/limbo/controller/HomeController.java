@@ -1,8 +1,10 @@
 package com.namics.limbo.controller;
 
 import com.frogermcs.gactions.AssistantActions;
+import com.frogermcs.gactions.ResponseBuilder;
 import com.frogermcs.gactions.api.StandardIntents;
 import com.frogermcs.gactions.api.request.RootRequest;
+import com.frogermcs.gactions.api.response.RootResponse;
 import com.namics.limbo.gaction.AppEngineResponseHandler;
 import com.namics.limbo.gaction.MainRequestHandlerFactory;
 import com.namics.limbo.gaction.MyPermissionRequestHandlerFactory;
@@ -47,8 +49,9 @@ public class HomeController {
 	}
 
 	@PostMapping("/test")
-	public void test(InputStream inputStream) throws IOException {
+	public RootResponse test(InputStream inputStream) throws IOException {
 		log.error("POST to test: {}", IOUtils.toString(inputStream));
+		return ResponseBuilder.tellResponse("You've just said: ueli");
 	}
 
 	private RootRequest parseActionRequest(RootRequest request) throws IOException {
