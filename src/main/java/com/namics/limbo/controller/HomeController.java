@@ -52,11 +52,11 @@ public class HomeController {
 		}
 		if (number == 3) {
 			return new GActionResponse().displayText("Achtung, lustig.")
-			                            .speech("Was ist ein studierter Bauer? —- Ein Ackerdemiker");
+			                            .speech("Was ist ein studierter Bauer? ..—- Ein Ackerdemiker");
 		}
 		if (number == 4) {
 			return new GActionResponse().displayText("Achtung, lustig.")
-			                            .speech("hopp sangt gallä, füre mit em Ballä");
+			                            .speech("hopp sangt gallä, füre mit m Ballä");
 		}
 		return new GActionResponse().speech("du hast limbo gesagt. wer kommt schon auf limbo " + number);
 	}
